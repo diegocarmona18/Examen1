@@ -1,0 +1,111 @@
+Algoritmo SistemaVentasEntradas
+	
+	// Definición de constantes
+    Definir MAX_CATEGORIAS, MAX_UNIDADES, MAX_VENTAS Como Entero;
+    MAX_CATEGORIAS <- 3;
+    MAX_UNIDADES <- 5;
+    MAX_VENTAS <- 100;
+    
+    // Definición de arreglos
+    Definir categorias, nombre Como Caracter;
+    Definir precios, cantidad, categoria, total Como Entero;
+    Definir estadisticas, ingresos Como Entero;
+    Definir totalVentas Como Entero;
+    Definir opcion, i Como Entero;
+    
+	// Tamaño de la dimensiones de los arreglos
+    Dimension categorias(3);  // índices 0,1,2
+    Dimension precios(3);     // índices 0,1,2
+    Dimension nombre(100);  // índices 0..99
+    Dimension cantidad(100);    // índices 0..99
+    Dimension categoria(100);    // índices 0..99
+    Dimension total(100);       // índices 0..99
+    Dimension estadisticas(3);           // índices 0,1,2
+    Dimension ingresos(3);               // índices 0,1,2
+    
+    // Inicialización de datos - ajustando índices para empezar en 0
+    categorias(0) <- "Sol";
+    categorias(1) <- "Palco";
+    categorias(2) <- "Sombra";
+    precios(0) <- 20000;
+    precios(1) <- 30000;
+    precios(2) <- 45000;
+    totalVentas <- 0;
+    
+    // Inicializar estadísticas
+    Para i <- 0 Hasta MAX_CATEGORIAS-1 Hacer
+        estadisticas(i) <- 0;
+        ingresos(i) <- 0;
+    FinPara;
+    
+    // Menú principal
+    Repetir
+        Escribir "Menú:";
+        Escribir "1. Registrar venta";
+        Escribir "2. Mostrar resumen de ventas";
+        Escribir "3. Mostrar estadísticas";
+        Escribir "4. Salir";
+        Escribir "Seleccione una opción: ";
+        Leer opcion;
+        
+        Segun opcion Hacer
+            1:
+                Si totalVentas >= MAX_VENTAS Entonces
+                    Escribir "Límite de ventas alcanzado.";
+                Sino
+                    // Mostrar categorías
+                    Escribir "Categorías disponibles:";
+                    Para i <- 0 Hasta MAX_CATEGORIAS-1 Hacer
+                        Escribir (i+1), ". ", categorias(i), " - ", precios(i), " CRC";
+                    FinPara;
+                    
+                    // Registro de venta
+                    Escribir "Ingrese nombre del comprador: ";
+                    Leer nombre(totalVentas);
+                    
+                    Repetir
+                        Escribir "Seleccione una categoría (1 - ", MAX_CATEGORIAS, "): ";
+                        Leer categoria(totalVentas);
+                        categoria(totalVentas) <- categoria(totalVentas) - 1; // Ajustar el índice
+                    Hasta Que categoria(totalVentas) >= 0 Y categoria(totalVentas) < MAX_CATEGORIAS;
+                    
+                    Repetir
+                        Escribir "Ingrese la cantidad de entradas (Máximo ", MAX_UNIDADES, "): ";
+                        Leer cantidad(totalVentas);
+                    Hasta Que cantidad(totalVentas) > 0 Y cantidad(totalVentas) <= MAX_UNIDADES;
+                    
+                    total(totalVentas) <- cantidad(totalVentas) * precios(categoria(totalVentas));
+                    
+                    // Actualizar estadísticas
+                    estadisticas(categoria(totalVentas)) <- estadisticas(categoria(totalVentas)) + cantidad(totalVentas);
+                    ingresos(categoria(totalVentas)) <- ingresos(categoria(totalVentas)) + total(totalVentas);
+                    
+                    Escribir "Venta registrada con éxito: ", nombre(totalVentas);
+                    Escribir "Compró ", cantidad(totalVentas), " entradas en ", categorias(categoria(totalVentas));
+                    Escribir "Total: ", total(totalVentas), " CRC";
+                    
+                    totalVentas <- totalVentas + 1;
+                FinSi;
+            2:
+                Si totalVentas = 0 Entonces
+                    Escribir "No hay ventas registradas.";
+                Sino
+                    Escribir "Resumen de ventas:";
+                    Para i <- 0 Hasta totalVentas-1 Hacer
+                        Escribir nombre(i), " - ", categorias(categoria(i));
+                        Escribir cantidad(i), " entradas - Total: ", total(i), " CRC";
+                    FinPara;
+                FinSi;
+            3:
+                Escribir "Estadísticas acumuladas:";
+                Para i <- 0 Hasta MAX_CATEGORIAS-1 Hacer
+                    Escribir categorias(i), ": ", estadisticas(i), " entradas vendidas";
+                    Escribir "Total recaudado: ", ingresos(i), " CRC";
+                FinPara;
+            4:
+                Escribir "Saliendo...";
+            De Otro Modo:
+                Escribir "Opción inválida. Intente de nuevo.";
+        FinSegun;
+    Hasta Que opcion = 4;
+FinAlgoritmo
